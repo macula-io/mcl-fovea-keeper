@@ -1,0 +1,79 @@
+# Build ghcr.io/macula-io/mcl-fovea-keeper, then sign it and attest its SBOM and
+# provenance (macula-ci-images' attest-image.yml), so the keeper's machine runs
+# a keeper our CI signed.
+#
+# The machine runs the image BY DIGEST from its own keeper.env: a build here
+# changes nothing until that digest is moved. The tags are for readers:
+#   latest, <semver> (from a v* tag), git-<full commit sha> (never moved)
+
+name: build-push
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+    paths-ignore: ['**.md', 'LICENSE', 'systemd/**', 'keeper.example.json']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-push-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      digest: ${{ steps.push.outputs.digest }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Tags
+        id: tags
+        run: |
+          image=ghcr.io/macula-io/mcl-fovea-keeper
+          {
+            echo "tags<<EOF"
+            echo "$image:git-${GITHUB_SHA}"
+            case "$GITHUB_REF" in
+              refs/tags/v*)    echo "$image:${GITHUB_REF#refs/tags/v}" ;;
+              refs/heads/main) echo "$image:latest" ;;
+            esac
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - id: push
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        with:
+          context: .
+          file: Containerfile
+          push: true
+          provenance: false
+          sbom: false
+          tags: ${{ steps.tags.outputs.tags }}
+          build-args: |
+            REVISION=${{ github.sha }}
+
+  attest:
+    needs: build
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    uses: macula-io/macula-ci-images/.github/workflows/attest-image.yml@b304162c9b46b366f93af362d3a76f17ae01794f
+    with:
+      image: ghcr.io/macula-io/mcl-fovea-keeper
+      digest: ${{ needs.build.outputs.digest }}
