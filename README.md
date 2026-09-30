@@ -11,7 +11,6 @@ The keeper fetches fovea's signed observations from the mesh every 15 minutes, k
 | `main.go` | The keeper: one run fetches every slot, keeps new records `fovea verify` accepts (refused ones apart), logs the fetch, and writes each slot's `fovea verify --chain` verdict. |
 | `keep.sh` | The image's entrypoint, one run: pulls the records clone, clones [mcl-fovea-assessments](https://github.com/macula-io/mcl-fovea-assessments), runs the keeper, commits and pushes what it kept. |
 | `Containerfile` | The image: the keeper, the released `fovea` (v0.3.0) and `keep.sh`. |
-| `keeper.example.json` | What the running keeper fetches: realm, profile, the stations it asks, the slots it keeps. |
 | `systemd/` | The user timer (7, 22, 37 and 52 past) and the unit that runs the image by digest. |
 
 ## The image
@@ -27,12 +26,11 @@ cosign verify ghcr.io/macula-io/mcl-fovea-keeper@sha256:<digest> \
 
 ## Running a keeper
 
-Anyone can run one and compare what they keep with ours. The machine supplies the configuration, the image the code:
+Anyone can run one and compare what they keep with ours. The image brings the code, the records repository the policy, the machine only its key and paths:
 
 | Mounted at | What |
 | --- | --- |
-| `/records` | A clone of mcl-fovea-records (your fork, for your own keeper), read-write |
-| `/etc/fovea-keeper/keeper.json` | The configuration (`keeper.example.json`) |
+| `/records` | A clone of mcl-fovea-records (your fork, for your own keeper), read-write. Its `keeper.json` is the keeping policy: realm, profile, the stations it asks, the slots it keeps. |
 | `/etc/fovea-keeper/deploy_key` | An ssh key that can push to that clone's origin, and nothing else |
 | `/etc/fovea-keeper/known_hosts` | GitHub's pinned host key |
 

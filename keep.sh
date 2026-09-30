@@ -4,8 +4,9 @@
 # what it kept. Everything it runs is in this image; the records repository it
 # works on is data only.
 #
-#   /records                     a clone of mcl-fovea-records (read-write)
-#   /etc/fovea-keeper/keeper.json   what to fetch (local config, read-only)
+#   /records                     a clone of mcl-fovea-records (read-write);
+#                                its keeper.json is the keeping policy (realm,
+#                                stations, slots), reviewed in that repository
 #   /etc/fovea-keeper/deploy_key    the key that writes only the records repo
 #   /etc/fovea-keeper/known_hosts   GitHub's pinned host key
 #
@@ -23,7 +24,7 @@ git pull --quiet --ff-only
 mkdir -p records endorsements
 git clone --quiet https://github.com/macula-io/mcl-fovea-assessments.git /tmp/assessments
 status=0
-keeper -config "$conf/keeper.json" -root . -fovea fovea -assessments /tmp/assessments || status=$?
+keeper -config keeper.json -root . -fovea fovea -assessments /tmp/assessments || status=$?
 
 git add -- records endorsements
 if ! git diff --cached --quiet; then

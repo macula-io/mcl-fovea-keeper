@@ -2,7 +2,8 @@
 # image BY DIGEST (KEEPER_IMAGE, set in the machine's keeper.env, never here) on
 # the podman network fovea-keeper: an IPv6 route to the IPv6-only stations and
 # none to the machine's localhost-only services. Nothing from the records
-# repository is executed: the image brings the code, the machine the config.
+# repository is executed: the image brings the code, the records repository
+# the keeping policy (its keeper.json), the machine only its key and paths.
 # A failed run fails the unit, so `systemctl --user --failed` and the journal
 # show it.
 [Unit]
@@ -18,7 +19,6 @@ EnvironmentFile=%h/fovea-keeper/keeper.env
 Environment=KEEPER_PODMAN_ARGS=
 ExecStart=/usr/bin/podman run --rm --pull=missing --network fovea-keeper $KEEPER_PODMAN_ARGS \
     -v %h/fovea-keeper/mcl-fovea-records:/records \
-    -v %h/fovea-keeper/keeper.json:/etc/fovea-keeper/keeper.json:ro \
     -v %h/.ssh/fovea_keeper_deploy:/etc/fovea-keeper/deploy_key:ro \
     -v %h/fovea-keeper/known_hosts:/etc/fovea-keeper/known_hosts:ro \
     ${KEEPER_IMAGE}
