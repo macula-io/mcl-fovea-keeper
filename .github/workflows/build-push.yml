@@ -23,7 +23,21 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # NO IMAGE WHILE THE CODE FAILS ITS CHECKS (mcl-om#34). The keeper has no test
+  # files yet, so `go test' compiles every package and runs nothing; with
+  # `go vet' that is the whole gate today, and a test added later joins it.
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
+        with:
+          go-version-file: go.mod
+      - run: go vet ./...
+      - run: go test ./...
+
   build:
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       contents: read
