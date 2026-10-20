@@ -23,6 +23,19 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # REFUSED BEFORE ANYTHING IS PUSHED: a v* tag off the default branch (or off its
+  # line's release-<major>.<minor> branch), or whose version is not the one this
+  # repository publishes, stops here, so a refused tag leaves no image on the
+  # registry. Any other ref passes. attest-image checks the same again before it
+  # signs. Pinned by full commit sha, as the attest call is.
+  guard:
+    permissions:
+      contents: read
+    uses: macula-io/macula-ci-images/.github/workflows/release-guard.yml@b4c41abb404c32215a2823b7f19ac65b732e1dfe
+    # Go: the tag is the version (go.mod names none), declared rather than defaulted.
+    with:
+      versions: none
+
   # NO IMAGE WHILE THE CODE FAILS ITS CHECKS (mcl-om#34). The keeper has no test
   # files yet, so `go test' compiles every package and runs nothing; with
   # `go vet' that is the whole gate today, and a test added later joins it.
@@ -37,7 +50,7 @@ jobs:
       - run: go test ./...
 
   build:
-    needs: test
+    needs: [guard, test]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -87,7 +100,9 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    uses: macula-io/macula-ci-images/.github/workflows/attest-image.yml@fa59fba58d1b65dce35f8613dcb257273a0f29ed
+    uses: macula-io/macula-ci-images/.github/workflows/attest-image.yml@b4c41abb404c32215a2823b7f19ac65b732e1dfe
     with:
       image: ghcr.io/macula-io/mcl-fovea-keeper
       digest: ${{ needs.build.outputs.digest }}
+      # Go: the tag is the version (go.mod names none); the tag must still be on main.
+      versions: none
