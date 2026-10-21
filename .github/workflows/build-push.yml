@@ -49,8 +49,24 @@ jobs:
       - run: go vet ./...
       - run: go test ./...
 
+  # THE STRUCTURAL FLOOR (macula-io/macula-codebase-checks#9): deep nesting and
+  # tangled functions fail the build. The caps are spelled out in .golangci.yml,
+  # never taken from a tool default, and there is no baseline to fall back on.
+  lint:
+    name: structural lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # v6.3.0
+        with:
+          go-version-file: go.mod
+      - uses: golangci/golangci-lint-action@4afd733a84b1f43292c63897423277bb7f4313a9 # v8
+        with:
+          version: v2.15.0
+          args: --timeout 10m
+
   build:
-    needs: [guard, test]
+    needs: [guard, test, lint]
     runs-on: ubuntu-latest
     permissions:
       contents: read

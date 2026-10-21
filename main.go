@@ -203,20 +203,29 @@ func keepEndorsement(link *stationlink.Link, realm string, observer [32]byte, ro
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	if v, err := link.FindRecord(ctx, key); err == nil {
-		r := v.Record()
-		if wire, err := record.Encode(r); err == nil {
-			sum := sha256.Sum256(wire)
-			name := filepath.Join(dir, fmt.Sprintf("%d-%s.hex", r.CreatedAt, hex.EncodeToString(sum[:])[:16]))
-			if _, err := os.Stat(name); err != nil {
-				if err := os.WriteFile(name, []byte(hex.EncodeToString(wire)+"\n"), 0o644); err != nil {
-					return nil, err
-				}
-			}
+		if err := keepNewestRecord(v.Record(), dir); err != nil {
+			return nil, err
 		}
 	}
 	files, err := filepath.Glob(filepath.Join(dir, "*.hex"))
 	sort.Strings(files)
 	return files, err
+}
+
+// keepNewestRecord writes r into dir once. A record whose name is already there
+// stays as it is: the file name carries the digest, so a name on disk is the
+// same record. A record that does not encode is nothing to keep.
+func keepNewestRecord(r record.Record, dir string) error {
+	wire, err := record.Encode(r)
+	if err != nil {
+		return nil
+	}
+	sum := sha256.Sum256(wire)
+	name := filepath.Join(dir, fmt.Sprintf("%d-%s.hex", r.CreatedAt, hex.EncodeToString(sum[:])[:16]))
+	if _, err := os.Stat(name); err == nil {
+		return nil
+	}
+	return os.WriteFile(name, []byte(hex.EncodeToString(wire)+"\n"), 0o644)
 }
 
 func verify(fovea string, cfg config, s slot, assessments string, endorsements []string, wire []byte) (string, bool) {
