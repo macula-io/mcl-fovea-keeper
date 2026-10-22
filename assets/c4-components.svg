@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 840" role="img" aria-label="mcl-fovea-keeper components">
+<title>mcl-fovea-keeper components</title>
+<style>
+.t-name { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; }
+.t-desc { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; }
+.t-rel { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; paint-order: stroke; stroke-width: 4px; stroke-linejoin: round; }
+.t-code { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 13px; font-weight: 600; }
+.t-type { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px; }
+.t-bound { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 12px; font-weight: 600; }
+.t-leg { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; }
+.edge { fill: none; stroke-width: 1.25; }
+.edge-later { fill: none; stroke-width: 1.25; stroke-dasharray: 5 4; }
+.bg { fill: #FFFFFF; }
+.b-sys { fill: #F5E9CC; stroke: #A56F0A; stroke-width: 2; }
+.b-per { fill: #E3EBF2; stroke: #3B5B7A; stroke-width: 1.25; }
+.b-mac { fill: #E6E4EE; stroke: #5E5A78; stroke-width: 1.25; }
+.b-ext { fill: #ECEFED; stroke: #8A9791; stroke-width: 1.25; }
+.b-cmp { fill: #FFFFFF; stroke: #8A9791; stroke-width: 1.25; }
+.b-later { fill: none; stroke: #8A9791; stroke-width: 1.25; stroke-dasharray: 5 4; }
+.bound { fill: none; stroke: #B3BDB8; stroke-width: 1; }
+.head { fill: #3B5B7A; }
+.t-name, .t-code { fill: #16201D; }
+.t-type, .t-bound, .t-leg { fill: #66736E; }
+.t-desc { fill: #34413C; }
+.t-rel { fill: #66736E; stroke: #FFFFFF; }
+.edge, .edge-later { stroke: #8A9791; }
+.arrowhead { fill: #8A9791; }
+@media (prefers-color-scheme: dark) {
+.bg { fill: #171F1C; }
+.b-sys { fill: #3A2E13; stroke: #E3AA3C; }
+.b-per { fill: #1D2A36; stroke: #8EB4D8; }
+.b-mac { fill: #26243A; stroke: #A9A4C8; }
+.b-ext { fill: #1C2421; stroke: #7D8B85; }
+.b-cmp { fill: #171F1C; stroke: #7D8B85; }
+.b-later { stroke: #7D8B85; }
+.bound { stroke: #4A5752; }
+.head { fill: #8EB4D8; }
+.t-name, .t-code { fill: #E6ECE9; }
+.t-type, .t-bound, .t-leg { fill: #93A09A; }
+.t-desc { fill: #C3CDC8; }
+.t-rel { fill: #93A09A; stroke: #171F1C; }
+.edge, .edge-later { stroke: #7D8B85; }
+.arrowhead { fill: #7D8B85; }
+}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="bg" x="0" y="0" width="1060" height="840"/>
+<rect class="b-cmp" x="64" y="30" width="290" height="96" rx="10"/>
+<text class="t-name" x="80" y="58">fovea-keeper.timer, .service</text>
+<text class="t-type" x="80" y="76">[systemd user units]</text>
+<text class="t-desc" x="80" y="100">7, 22, 37, 52 past each hour;</text>
+<text class="t-desc" x="80" y="116">podman run of KEEPER_IMAGE</text>
+<rect class="b-cmp" x="385" y="30" width="290" height="96" rx="10"/>
+<text class="t-name" x="401" y="58">Mounts</text>
+<text class="t-type" x="401" y="76">[podman volumes]</text>
+<text class="t-desc" x="401" y="100">/records (a clone, read-write);</text>
+<text class="t-desc" x="401" y="116">deploy_key, known_hosts (ro)</text>
+<rect class="b-ext" x="706" y="30" width="290" height="96" rx="10"/>
+<text class="t-name" x="722" y="58">mcl-fovea-assessments</text>
+<text class="t-type" x="722" y="76">[External: public git]</text>
+<text class="t-desc" x="722" y="100">Cloned to /tmp/assessments</text>
+<text class="t-desc" x="722" y="116">on every run</text>
+<rect class="bound" x="40" y="156" width="980" height="474" rx="12"/>
+<text class="t-bound" x="56" y="178">Keeper container</text>
+<rect class="b-cmp" x="64" y="200" width="451" height="104" rx="10"/>
+<text class="t-code" x="80" y="228">keep.sh</text>
+<text class="t-type" x="80" y="246">[entrypoint, /bin/sh]</text>
+<text class="t-desc" x="80" y="270">Pulls /records, clones the assessments, runs keeper,</text>
+<text class="t-desc" x="80" y="286">commits records/ and endorsements/, pushes (3 tries)</text>
+<rect class="b-sys" x="545" y="200" width="451" height="104" rx="10"/>
+<text class="t-code" x="561" y="228">run, dial</text>
+<text class="t-type" x="561" y="246">[main.go]</text>
+<text class="t-desc" x="561" y="270">Reads keeper.json; a throwaway identity; links to the</text>
+<text class="t-desc" x="561" y="286">first station that proves its node id; each slot in turn</text>
+<rect class="b-cmp" x="64" y="344" width="290" height="120" rx="10"/>
+<text class="t-code" x="80" y="372">keepEndorsement</text>
+<text class="t-type" x="80" y="390">[main.go]</text>
+<text class="t-desc" x="80" y="414">Finds the realm's member</text>
+<text class="t-desc" x="80" y="430">endorsement of the observer;</text>
+<text class="t-desc" x="80" y="446">keeps it once, by digest</text>
+<rect class="b-cmp" x="385" y="344" width="290" height="120" rx="10"/>
+<text class="t-code" x="401" y="372">keepSlot</text>
+<text class="t-type" x="401" y="390">[main.go]</text>
+<text class="t-desc" x="401" y="414">FindRecord on the slot; 0x23</text>
+<text class="t-desc" x="401" y="430">to the chain by seq, other types</text>
+<text class="t-desc" x="401" y="446">apart; flags a late record</text>
+<rect class="b-cmp" x="706" y="344" width="290" height="120" rx="10"/>
+<text class="t-code" x="722" y="372">verify, writeChain</text>
+<text class="t-type" x="722" y="390">[main.go, exec]</text>
+<text class="t-desc" x="722" y="414">fovea verify per record (refused</text>
+<text class="t-desc" x="722" y="430">ones apart); --chain over the</text>
+<text class="t-desc" x="722" y="446">slot into chain.txt</text>
+<rect class="b-cmp" x="64" y="492" width="290" height="112" rx="10"/>
+<text class="t-code" x="80" y="520">logFetch, lastFetch</text>
+<text class="t-type" x="80" y="538">[fetches.log]</text>
+<text class="t-desc" x="80" y="562">One line per fetch, with its</text>
+<text class="t-desc" x="80" y="578">time; a failed dial is logged</text>
+<text class="t-desc" x="80" y="594">into every slot</text>
+<rect class="b-ext" x="385" y="492" width="290" height="112" rx="10"/>
+<text class="t-name" x="401" y="520">fovea v0.4.0</text>
+<text class="t-type" x="401" y="538">[released binary, macula-fovea]</text>
+<text class="t-desc" x="401" y="562">Built into the image from</text>
+<text class="t-desc" x="401" y="578">its release tag; the only</text>
+<text class="t-desc" x="401" y="594">judge of a record</text>
+<rect class="b-mac" x="706" y="492" width="290" height="112" rx="10"/>
+<text class="t-name" x="722" y="520">macula-go v0.20.0</text>
+<text class="t-type" x="722" y="538">[Macula infrastructure, Go SDK]</text>
+<text class="t-desc" x="722" y="562">identity, profile, record,</text>
+<text class="t-desc" x="722" y="578">stationlink, transport</text>
+<rect class="b-ext" x="64" y="664" width="451" height="96" rx="10"/>
+<text class="t-name" x="80" y="692">mcl-fovea-records</text>
+<text class="t-type" x="80" y="710">[External: public git, over SSH]</text>
+<text class="t-desc" x="80" y="734">The clone mounted at /records; its origin</text>
+<text class="t-desc" x="80" y="750">takes the keeper's commits</text>
+<rect class="b-mac" x="545" y="664" width="451" height="96" rx="10"/>
+<text class="t-name" x="561" y="692">Macula stations, mesh DHT</text>
+<text class="t-type" x="561" y="710">[Macula infrastructure]</text>
+<text class="t-desc" x="561" y="734">The stations in keeper.json; IPv6 only,</text>
+<text class="t-desc" x="561" y="750">reached on the podman network fovea-keeper</text>
+<path class="edge" d="M260 126V200" marker-end="url(#a)"/>
+<text class="t-rel" x="268" y="186">runs</text>
+<path class="edge" d="M530 126V156" marker-end="url(#a)"/>
+<text class="t-rel" x="538" y="146">mounted</text>
+<path class="edge" d="M851 126V176H480V200" marker-end="url(#a)"/>
+<text class="t-rel" x="666" y="172" text-anchor="middle">git clone, HTTPS</text>
+<path class="edge" d="M515 252H545" marker-end="url(#a)"/>
+<text class="t-rel" x="530" y="244" text-anchor="middle">runs</text>
+<path class="edge" d="M640 304V344" marker-end="url(#a)"/>
+<text class="t-rel" x="648" y="330">each slot</text>
+<path class="edge" d="M385 404H354" marker-end="url(#a)"/>
+<text class="t-rel" x="370" y="396" text-anchor="middle">first</text>
+<path class="edge" d="M675 404H706" marker-end="url(#a)"/>
+<text class="t-rel" x="690" y="396" text-anchor="middle">then</text>
+<path class="edge" d="M460 464V478H209V492" marker-end="url(#a)"/>
+<text class="t-rel" x="330" y="474" text-anchor="middle">logs</text>
+<path class="edge" d="M851 464V478H600V492" marker-end="url(#a)"/>
+<text class="t-rel" x="726" y="474" text-anchor="middle">execs</text>
+<path class="edge" d="M996 252H1008V548H996" marker-end="url(#a)"/>
+<text class="t-rel" x="1036" y="400" text-anchor="middle" transform="rotate(90 1036 400)">links, finds</text>
+<path class="edge" d="M851 604V664" marker-end="url(#a)"/>
+<text class="t-rel" x="859" y="646">QUIC</text>
+<path class="edge" d="M64 252H24V712H64" marker-end="url(#a)"/>
+<text class="t-rel" x="16" y="480" text-anchor="middle" transform="rotate(-90 16 480)">pull, commit, push</text>
+<rect class="b-sys" x="24" y="796" width="22" height="14" rx="3"/>
+<text class="t-leg" x="54" y="808">In scope</text>
+<rect class="b-per" x="110.8" y="796" width="22" height="14" rx="3"/>
+<text class="t-leg" x="140.8" y="808">Person</text>
+<rect class="b-mac" x="184.39999999999998" y="796" width="22" height="14" rx="3"/>
+<text class="t-leg" x="214.39999999999998" y="808">Macula infrastructure</text>
+<rect class="b-ext" x="357.0" y="796" width="22" height="14" rx="3"/>
+<text class="t-leg" x="387.0" y="808">External system</text>
+<rect class="b-cmp" x="490.0" y="796" width="22" height="14" rx="3"/>
+<text class="t-leg" x="520.0" y="808">Container or component</text>
+<rect class="b-later" x="669.2" y="796" width="22" height="14" rx="3"/>
+<text class="t-leg" x="699.2" y="808">Planned, not built</text>
+<rect class="bound" x="822.0" y="796" width="22" height="14" rx="3"/>
+<text class="t-leg" x="852.0" y="808">Boundary</text>
+</svg>

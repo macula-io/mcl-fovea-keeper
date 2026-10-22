@@ -36,6 +36,12 @@ Anyone can run one and compare what they keep with ours. The image brings the co
 
 The container needs an IPv6 route to the stations (they are IPv6-only). Our keeper runs on a Macula lab machine as the user units in `systemd/`: `~/fovea-keeper/keeper.env` names the image by digest (`KEEPER_IMAGE=ghcr.io/macula-io/mcl-fovea-keeper@sha256:...`), the podman network `fovea-keeper` gives it an IPv6 route to the stations and none to the machine's own services, and the deploy key, generated on the machine, writes only mcl-fovea-records.
 
+## Architecture
+
+What the keeper talks to and what it is made of, as a C4 model: [architecture/README.md](architecture/README.md).
+
+![mcl-fovea-keeper system context](assets/c4-context.svg)
+
 ## Honest limits
 
 Our keeper runs on our own box: off the observer's box and off every station it observes, but **not independent of us**. Independent keepers, run by others, are what make a withheld record visible to everyone.
