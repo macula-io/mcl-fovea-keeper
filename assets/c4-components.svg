@@ -66,7 +66,7 @@
 <text class="t-code" x="80" y="228">keep.sh</text>
 <text class="t-type" x="80" y="246">[entrypoint, /bin/sh]</text>
 <text class="t-desc" x="80" y="270">Pulls /records, clones the assessments, runs keeper,</text>
-<text class="t-desc" x="80" y="286">commits records/ and endorsements/, pushes (3 tries)</text>
+<text class="t-desc" x="80" y="286">commits records-wire1/, endorsements/, pushes (3 tries)</text>
 <rect class="b-sys" x="545" y="200" width="451" height="104" rx="10"/>
 <text class="t-code" x="561" y="228">run, dial</text>
 <text class="t-type" x="561" y="246">[main.go]</text>
@@ -97,13 +97,13 @@
 <text class="t-desc" x="80" y="578">time; a failed dial is logged</text>
 <text class="t-desc" x="80" y="594">into every slot</text>
 <rect class="b-ext" x="385" y="492" width="290" height="112" rx="10"/>
-<text class="t-name" x="401" y="520">fovea v0.4.0</text>
+<text class="t-name" x="401" y="520">fovea v0.5.0</text>
 <text class="t-type" x="401" y="538">[released binary, macula-fovea]</text>
 <text class="t-desc" x="401" y="562">Built into the image from</text>
 <text class="t-desc" x="401" y="578">its release tag; the only</text>
 <text class="t-desc" x="401" y="594">judge of a record</text>
 <rect class="b-mac" x="706" y="492" width="290" height="112" rx="10"/>
-<text class="t-name" x="722" y="520">macula-go v0.20.0</text>
+<text class="t-name" x="722" y="520">macula-go v0.28.0</text>
 <text class="t-type" x="722" y="538">[Macula infrastructure, Go SDK]</text>
 <text class="t-desc" x="722" y="562">identity, profile, record,</text>
 <text class="t-desc" x="722" y="578">stationlink, transport</text>

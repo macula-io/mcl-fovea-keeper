@@ -55,16 +55,17 @@ type slot struct {
 func main() {
 	cfgFile := flag.String("config", "keeper.json", "the keeper's configuration")
 	root := flag.String("root", ".", "the records repository")
+	records := flag.String("records", "records", "the era directory, under -root, holding one directory per slot")
 	fovea := flag.String("fovea", "fovea", "the released fovea binary")
 	assessments := flag.String("assessments", "", "a clone of mcl-fovea-assessments")
 	flag.Parse()
-	if err := run(*cfgFile, *root, *fovea, *assessments); err != nil {
+	if err := run(*cfgFile, *root, *records, *fovea, *assessments); err != nil {
 		fmt.Fprintln(os.Stderr, "keeper:", err)
 		os.Exit(1)
 	}
 }
 
-func run(cfgFile, root, fovea, assessments string) error {
+func run(cfgFile, root, records, fovea, assessments string) error {
 	var cfg config
 	b, err := os.ReadFile(cfgFile)
 	if err != nil {
@@ -82,7 +83,7 @@ func run(cfgFile, root, fovea, assessments string) error {
 		// The keeper's own outage goes into every slot's log: a gap it causes
 		// must be visible as its own, not as the observer's.
 		for _, s := range cfg.Slots {
-			dir := filepath.Join(root, "records", s.StorageKey)
+			dir := filepath.Join(root, records, s.StorageKey)
 			if mkErr := os.MkdirAll(dir, 0o755); mkErr == nil {
 				_ = logFetch(dir, time.Now().UnixMilli(), fmt.Sprintf("- keeper could not reach a station: %v", err))
 			}
@@ -92,7 +93,7 @@ func run(cfgFile, root, fovea, assessments string) error {
 	defer link.Close("keeper run done")
 	var failed []string
 	for _, s := range cfg.Slots {
-		if err := keepSlot(link, cfg, p, s, root, fovea, assessments); err != nil {
+		if err := keepSlot(link, cfg, p, s, root, records, fovea, assessments); err != nil {
 			failed = append(failed, fmt.Sprintf("%s: %v", s.StorageKey, err))
 		}
 	}
@@ -130,8 +131,8 @@ func dial(stations []station, p profile.Profile) (*stationlink.Link, error) {
 	return nil, fmt.Errorf("no station answered: %s", strings.Join(errs, "; "))
 }
 
-func keepSlot(link *stationlink.Link, cfg config, p profile.Profile, s slot, root, fovea, assessments string) error {
-	dir := filepath.Join(root, "records", s.StorageKey)
+func keepSlot(link *stationlink.Link, cfg config, p profile.Profile, s slot, root, records, fovea, assessments string) error {
+	dir := filepath.Join(root, records, s.StorageKey)
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return err
 	}

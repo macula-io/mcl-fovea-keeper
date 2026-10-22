@@ -2,7 +2,7 @@ module github.com/macula-io/mcl-fovea-keeper
 
 go 1.27.0
 
-require github.com/macula-io/macula-go v0.20.0
+require github.com/macula-io/macula-go v0.28.0
 
 require (
 	github.com/google/uuid v1.6.0 // indirect

@@ -10,9 +10,14 @@
 #   /etc/fovea-keeper/deploy_key    the key that writes only the records repo
 #   /etc/fovea-keeper/known_hosts   GitHub's pinned host key
 #
+# Records are kept per era: records-wire1/ holds what the mesh signed on wire 1.0
+# (from the 19 October 2026 flag day), read by fovea v0.5.0. records/ is the
+# frozen era before it, read by fovea v0.4.0; the keeper never writes there again.
+#
 # Exits non-zero when the keeper or the push fails, after committing whatever
 # the run logged, so a failure is loud and its fetch log line is still kept.
 set -eu
+era=records-wire1
 conf=/etc/fovea-keeper
 export GIT_SSH_COMMAND="ssh -i $conf/deploy_key -o IdentitiesOnly=yes -o UserKnownHostsFile=$conf/known_hosts -o StrictHostKeyChecking=yes"
 git config --global user.name "fovea keeper"
@@ -21,12 +26,12 @@ git config --global --add safe.directory /records
 
 cd /records
 git pull --quiet --ff-only
-mkdir -p records endorsements
+mkdir -p "$era" endorsements
 git clone --quiet https://github.com/macula-io/mcl-fovea-assessments.git /tmp/assessments
 status=0
-keeper -config keeper.json -root . -fovea fovea -assessments /tmp/assessments || status=$?
+keeper -config keeper.json -root . -records "$era" -fovea fovea -assessments /tmp/assessments || status=$?
 
-git add -- records endorsements
+git add -- "$era" endorsements
 if ! git diff --cached --quiet; then
   git commit --quiet -m "keep: $(date -u +%Y-%m-%dT%H:%MZ)"
   pushed=0

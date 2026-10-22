@@ -9,9 +9,13 @@ The keeper fetches fovea's signed observations from the mesh every 15 minutes, k
 | Path | What |
 | --- | --- |
 | `main.go` | The keeper: one run fetches every slot, keeps new records `fovea verify` accepts (refused ones apart), logs the fetch, and writes each slot's `fovea verify --chain` verdict. |
-| `keep.sh` | The image's entrypoint, one run: pulls the records clone, clones [mcl-fovea-assessments](https://github.com/macula-io/mcl-fovea-assessments), runs the keeper, commits and pushes what it kept. |
-| `Containerfile` | The image: the keeper, the released `fovea` (v0.4.0) and `keep.sh`. |
+| `keep.sh` | The image's entrypoint, one run: pulls the records clone, clones [mcl-fovea-assessments](https://github.com/macula-io/mcl-fovea-assessments), runs the keeper on the current era directory, commits and pushes what it kept. |
+| `Containerfile` | The image: the keeper, the released `fovea` (v0.5.0) and `keep.sh`. |
 | `systemd/` | The user timer (7, 22, 37 and 52 past) and the unit that runs the image by digest. |
+
+## Eras
+
+A record is judged by the `fovea` that reads its wire format, and no `fovea` reads two. When the mesh moved to wire 1.0 on 19 October 2026, the keeper started a new era directory: `records-wire1/<slot>/` holds what it keeps from then on, verified by `fovea` v0.5.0, and `records/<slot>/` is frozen with the chain verdicts `fovea` v0.4.0 gave it. `keep.sh` names the era it writes (`-records`); the records repository's README names the gap between the two.
 
 ## The image
 

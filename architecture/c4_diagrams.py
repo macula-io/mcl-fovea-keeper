@@ -162,7 +162,7 @@ def components():
           ["Cloned to /tmp/assessments", "on every run"])
     d.bound(40, 156, 980, 474, "Keeper container")
     d.box("b-cmp", 64, 200, 451, 104, "keep.sh", "[entrypoint, /bin/sh]",
-          ["Pulls /records, clones the assessments, runs keeper,", "commits records/ and endorsements/, pushes (3 tries)"], code=True)
+          ["Pulls /records, clones the assessments, runs keeper,", "commits records-wire1/, endorsements/, pushes (3 tries)"], code=True)
     d.box("b-sys", 545, 200, 451, 104, "run, dial", "[main.go]",
           ["Reads keeper.json; a throwaway identity; links to the", "first station that proves its node id; each slot in turn"], code=True)
     d.box("b-cmp", 64, 344, 290, 120, "keepEndorsement", "[main.go]",
@@ -173,9 +173,9 @@ def components():
           ["fovea verify per record (refused", "ones apart); --chain over the", "slot into chain.txt"], code=True)
     d.box("b-cmp", 64, 492, 290, 112, "logFetch, lastFetch", "[fetches.log]",
           ["One line per fetch, with its", "time; a failed dial is logged", "into every slot"], code=True)
-    d.box("b-ext", 385, 492, 290, 112, "fovea v0.4.0", "[released binary, macula-fovea]",
+    d.box("b-ext", 385, 492, 290, 112, "fovea v0.5.0", "[released binary, macula-fovea]",
           ["Built into the image from", "its release tag; the only", "judge of a record"])
-    d.box("b-mac", 706, 492, 290, 112, "macula-go v0.20.0", "[Macula infrastructure, Go SDK]",
+    d.box("b-mac", 706, 492, 290, 112, "macula-go v0.28.0", "[Macula infrastructure, Go SDK]",
           ["identity, profile, record,", "stationlink, transport"])
     d.box("b-ext", 64, 664, 451, 96, "mcl-fovea-records", "[External: public git, over SSH]",
           ["The clone mounted at /records; its origin", "takes the keeper's commits"])
