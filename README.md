@@ -11,7 +11,7 @@ The keeper fetches fovea's signed observations from the mesh every 15 minutes, k
 | `main.go` | The keeper: one run fetches every slot, keeps new records `fovea verify` accepts (refused ones apart), logs the fetch, and writes each slot's `fovea verify --chain` verdict. |
 | `keep.sh` | The image's entrypoint, one run: pulls the records clone, clones [mcl-fovea-assessments](https://github.com/macula-io/mcl-fovea-assessments), runs the keeper on the current era directory, commits and pushes what it kept. |
 | `Containerfile` | The image: the keeper, the released `fovea` (v0.5.0) and `keep.sh`. |
-| `systemd/` | The user timer (7, 22, 37 and 52 past) and the unit that runs the image by digest. |
+| `systemd/` | The user timer (7, 22, 37 and 52 past), the unit that runs the image by digest, and `move-keeper-image.sh`, which moves the machine to another digest (keeping the old `keeper.env`) and runs the keeper once. |
 
 ## Eras
 
