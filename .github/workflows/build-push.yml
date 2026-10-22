@@ -13,6 +13,8 @@ on:
     branches: [main]
     tags: ['v*']
     paths-ignore: ['**.md', 'LICENSE', 'systemd/**', 'assets/**', 'architecture/**']
+  # A pull request runs the checks (test, lint) on its tip and builds nothing.
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -29,6 +31,7 @@ jobs:
   # registry. Any other ref passes. attest-image checks the same again before it
   # signs. Pinned by full commit sha, as the attest call is.
   guard:
+    if: github.event_name != 'pull_request'
     permissions:
       contents: read
     uses: macula-io/macula-ci-images/.github/workflows/release-guard.yml@b4c41abb404c32215a2823b7f19ac65b732e1dfe
@@ -66,6 +69,7 @@ jobs:
           args: --timeout 10m
 
   build:
+    if: github.event_name != 'pull_request'
     needs: [guard, test, lint]
     runs-on: ubuntu-latest
     permissions:
