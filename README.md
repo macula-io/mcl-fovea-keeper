@@ -19,7 +19,7 @@ A record is judged by the `fovea` that reads its wire format, and no `fovea` rea
 
 ## The image
 
-CI builds `ghcr.io/macula-io/mcl-fovea-keeper` on every push to `main` (`:latest`) and every `v*` tag (`:<version>`), each also as `:git-<sha>`, and signs it by digest with an SPDX SBOM and SLSA provenance (macula-ci-images' `attest-image.yml`). Check a digest yourself:
+CI builds `ghcr.io/macula-io/mcl-fovea-keeper` on every push to `main` (`:latest`) and every `v*` tag (`:<version>`), each also as `:git-<sha>`, and signs it by digest with an SPDX SBOM and SLSA provenance (macula-ci-images' `attest-image.yml`). Check a digest yourself, with cosign v3 (the signature is a v3 bundle; cosign v2 answers "no signatures found"):
 
 ```sh
 cosign verify ghcr.io/macula-io/mcl-fovea-keeper@sha256:<digest> \
